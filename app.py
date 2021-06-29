@@ -19,16 +19,23 @@ def home():
 
 @app.route('/predict',methods=['POST'])
 def predict():
-    '''
-    For rendering results on HTML GUI
-    '''
+    database = "prediction_df"
+
+    if request.method == 'POST':
+        data1 = request.form('Date')
+        data2 = request.form('Original Sales')
+        arr = np.array([data1, data2])
+        pred = model.predict(arr)
+    
+    
+    
     #int_features = [int(x) for x in request.form.values()]
     #final_features = [np.array(int_features)]
-    prediction = model.predict(prediction_df)
+    #prediction = model.predict(prediction_df)
 
-    output = prediction_df
+    #output = prediction_df
 
-    return render_template('index.html', prediction_text='Predicted sales are $ {}'.{prediction_df}))
+    return render_template('index.html', prediction_text='Predicted sales are $ {}', data = pred)
 
 @app.route('/predict_api',methods=['POST'])
 def predict_api():
@@ -38,8 +45,8 @@ def predict_api():
     data = request.get_json(force=True)
     prediction = model.predict([np.array(list(data.values()))])
 
-    output = prediction_df
-    return jsonify(output)
+    #output = prediction_df
+    #return jsonify(output)
 
 if __name__ == "__main__":
     app.run(debug=False)
